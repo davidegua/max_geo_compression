@@ -15,7 +15,7 @@ dv_derivatives     = test_data['dv_derivatives']
 bins_range         = test_data['bins_range']
 geo_bins_max       = test_data['geo_bins_max']
 mocks_measurements = test_data['mocks_measurements']
-dv                 = test_data['mocks_measurements']
+dv                 = test_data['dv']
 
 "save time"
 bins_range = np.array([[2,4],[6,8],[3,5]])
