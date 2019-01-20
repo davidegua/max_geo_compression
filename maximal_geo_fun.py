@@ -20,6 +20,11 @@ def gc_bins_cov_matrices(b0_mocks, which_bin_idx_ar, dim_new_dv):
     for i in range(dim_new_dv):
 
         bin_triangles_mocks = b0_mocks[np.where(which_bin_idx_ar==i)]
+
+        "ensure that each bin has less triangles than half the number of mocks available"
+        assert bin_triangles_mocks.shape[0] < 0.5*b0_mocks.shape[1], \
+            "bin too large (%d), not enough mocks (%d)!"%(bin_triangles_mocks.shape[0],b0_mocks.shape[1])
+
         gc_cov_mat_list.append(np.cov(bin_triangles_mocks))
 
     return gc_cov_mat_list
