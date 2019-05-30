@@ -1,4 +1,5 @@
-# max_geo_compression
+# Enhanced Geometrical Compression
+
 code for the compression of 3pt statistics
 
 This code is based on the paper: link
