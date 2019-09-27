@@ -22,11 +22,16 @@ class Best_bins:
         print('object initialised')
 
 
-    def best_binnings(self):
+    def best_binnings_geo(self):
+
         self.best_bins, self.s_j = gt.best_binning(self.tr_ar,self.dv_drv,self.rbins,self.ngb_max)
 
-        print('best bins found', self.best_bins)
+        print('best bins found geo ', self.best_bins)
 
+    def best_binnings_geo_max(self, mocks_measurements):
+        self.best_bins, self.s_j = mg.best_binning(self.tr_ar,self.dv_drv,self.rbins,self.ngb_max,
+                                                   mocks_measurements)
+        print('best bins found geo_max ', self.best_bins)
 
     def rearrange(self):
         self.list_of_ar, self.which_b_idx_ar = gt.new_dv(self.tr_ar,self.best_bins)
