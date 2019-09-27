@@ -145,7 +145,8 @@ def gbin_reshape(lt, nbins_choice, par_num):
                 merged_bin.append(list_of_ar[i][:,j])
 
     merged_bin = np.array(merged_bin).T
-    reshaped_list.append(merged_bin)
+    if len(merged_bin)>0:
+        reshaped_list.append(merged_bin)
     reshaped_dim = len(reshaped_list)
 
     "fix the indexes array by replacing the triangles final destination"
@@ -168,4 +169,124 @@ def find_tr_index(lt,tr):
     return np.argmin(np.sum(np.fabs(lt.T-tr),axis = 1))
 
 
+"""
+create the equivalent to the geometrical compression
+"""
 
+def best_binning(lt, old_der_ar,bins_range, max_num_gbins,mocks_measurements):
+
+    dim_a = bins_range[0,1] - bins_range[0,0]
+    dim_c = bins_range[1,1] - bins_range[1,0]
+    dim_r = bins_range[2,1] - bins_range[2,0]
+
+    num_par = old_der_ar.shape[0]
+
+    S_ij_grid      = np.zeros([dim_a,dim_c,dim_r,num_par],dtype=float)
+    S_ij_grid_norm = np.zeros([dim_a,dim_c,dim_r,num_par],dtype=float)
+
+    for l in range(dim_a):
+        for m in range(dim_c):
+            print("m %d" %m)
+            for n in range(dim_r):
+                # print("n %d" %n)
+
+
+                temp_bin_choice = np.array([bins_range[0,0] + l,bins_range[1,0] + m, bins_range[2,0] + n])
+
+                S_ij_grid[l,m,n] = s_par_for_nchoice(lt, temp_bin_choice, old_der_ar, max_num_gbins,
+                                                     mocks_measurements)
+
+        print("l %d"%l)
+
+    for p in range(num_par):
+
+        S_ij_grid_norm[:,:,:,p] = S_ij_grid[:,:,:,p] / np.amax(S_ij_grid[:,:,:,p])
+
+    s_j = np.sum(S_ij_grid_norm,axis=3)
+
+    ind = np.unravel_index(np.argmax(s_j,axis=None),s_j.shape)
+
+    print("index maximum", ind)
+
+    print("corresponding number of bins ", bins_range[:,0] + np.array(ind))
+
+    return bins_range[:,0] + np.array(ind), s_j
+
+
+def s_par_for_nchoice(lt, new_pars_bins, old_der_ar, max_num_gbins,mocks_measurements):
+
+    g_der_ar = g_der_arr(lt,new_pars_bins,old_der_ar, max_num_gbins,mocks_measurements)
+
+    S_ij = np.sum(np.fabs(g_der_ar), axis=1)
+
+    # print("S_ij",S_ij)
+
+    return S_ij
+
+def g_der_arr(lt, new_pars_bins, old_der_ar, max_num_gbins, mocks_measurements):
+
+    # list_of_ar2, which_bin_idx_ar = gt.new_dv(lt, new_pars_bins)
+
+    par_num   = old_der_ar.shape[0]
+
+    list_of_ar3, new_gdim, which_bin_idx_ar3 = gbin_reshape(lt,new_pars_bins,par_num)
+
+    # print("parnum %d  new_gdim %d" %(par_num,new_gdim))
+
+    # print("mocks shape", mocks_measurements.shape)
+    # print("old der shape", old_der_ar.shape)
+
+    """
+    check that in each bin the number of triangles
+    is less than half the number of mocks 
+    """
+
+    for i in range(new_gdim):
+
+        bin_triangles_mocks = mocks_measurements[np.where(which_bin_idx_ar3==i)]
+
+        triangles_per_bin = bin_triangles_mocks.shape[0]
+        num_mocks_max     =  0.5*mocks_measurements.shape[1]
+
+        if triangles_per_bin>num_mocks_max:
+
+            # print("too many triangles per bin  ", triangles_per_bin,num_mocks_max)
+
+            return np.zeros([par_num, new_gdim * par_num], dtype=float)
+
+    weight_list = gc_bin_weights(mocks_measurements,old_der_ar,which_bin_idx_ar3,new_gdim)
+
+    new_geo_max_dim = len(weight_list)*par_num
+
+    g_der_ar  = np.zeros([par_num,new_geo_max_dim],dtype=float)
+
+    if new_geo_max_dim <  max_num_gbins:
+
+        # print("new gmax dim % d  limit dim %d"%(new_geo_max_dim,max_num_gbins))
+
+        for i in range(par_num):
+            g_der_ar[i] = gc_max_dv_normed(old_der_ar[i],which_bin_idx_ar3,new_gdim,weight_list)
+
+    return g_der_ar
+
+def gc_max_dv_normed(bk0, which_bin_idx_ar, dim_new_dv, gc_weights_list):
+
+    new_dv = []
+
+    for i in range(dim_new_dv):
+
+        if gc_weights_list[i].size>1:
+            new_dv_el = np.dot(gc_weights_list[i].T,bk0[np.where(which_bin_idx_ar==i)])\
+                        / np.sum(gc_weights_list[i].T,axis=1)
+
+            # print(np.sum(gc_weights_list[i].T,axis=1))
+            # print("weights shape ",gc_weights_list[i].T.shape, " new_dv_el shape ", new_dv_el.shape)
+            # "with normalisation for each bin"
+            # new_dv_el = np.dot(gc_weights_list[i].T,bk0[np.where(which_bin_idx_ar==i)])/(1.*gc_weights_list[i].shape[0])
+
+        if gc_weights_list[i].size == 1:
+            new_dv_el = bk0[np.where(which_bin_idx_ar==i)]
+
+        new_dv.append(new_dv_el)
+
+    return np.array([item for sublist in new_dv for item in sublist])
