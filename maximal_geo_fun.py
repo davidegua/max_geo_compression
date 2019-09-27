@@ -77,8 +77,6 @@ def gc_max_dv(bk0, which_bin_idx_ar, dim_new_dv, gc_weights_list):
 
         if gc_weights_list[i].size>1:
             new_dv_el = np.dot(gc_weights_list[i].T,bk0[np.where(which_bin_idx_ar==i)])
-            # "with normalisation for each bin"
-            # new_dv_el = np.dot(gc_weights_list[i].T,bk0[np.where(which_bin_idx_ar==i)])/(1.*gc_weights_list[i].shape[0])
 
         if gc_weights_list[i].size == 1:
             new_dv_el = bk0[np.where(which_bin_idx_ar==i)]
@@ -151,8 +149,6 @@ def gbin_reshape(lt, nbins_choice, par_num):
 
     "fix the indexes array by replacing the triangles final destination"
     for l in range(reshaped_dim):
-        # print(l,reshaped_dim)
-        # print(reshaped_list[l].shape)
         for m in range(reshaped_list[l].shape[1]):
             index = find_tr_index(lt, reshaped_list[l][:,m])
             which_bin_idx_ar[index] = l
@@ -186,10 +182,7 @@ def best_binning(lt, old_der_ar,bins_range, max_num_gbins,mocks_measurements):
 
     for l in range(dim_a):
         for m in range(dim_c):
-            print("m %d" %m)
             for n in range(dim_r):
-                # print("n %d" %n)
-
 
                 temp_bin_choice = np.array([bins_range[0,0] + l,bins_range[1,0] + m, bins_range[2,0] + n])
 
@@ -219,22 +212,13 @@ def s_par_for_nchoice(lt, new_pars_bins, old_der_ar, max_num_gbins,mocks_measure
 
     S_ij = np.sum(np.fabs(g_der_ar), axis=1)
 
-    # print("S_ij",S_ij)
-
     return S_ij
 
 def g_der_arr(lt, new_pars_bins, old_der_ar, max_num_gbins, mocks_measurements):
 
-    # list_of_ar2, which_bin_idx_ar = gt.new_dv(lt, new_pars_bins)
-
     par_num   = old_der_ar.shape[0]
 
     list_of_ar3, new_gdim, which_bin_idx_ar3 = gbin_reshape(lt,new_pars_bins,par_num)
-
-    # print("parnum %d  new_gdim %d" %(par_num,new_gdim))
-
-    # print("mocks shape", mocks_measurements.shape)
-    # print("old der shape", old_der_ar.shape)
 
     """
     check that in each bin the number of triangles
@@ -262,8 +246,6 @@ def g_der_arr(lt, new_pars_bins, old_der_ar, max_num_gbins, mocks_measurements):
 
     if new_geo_max_dim <  max_num_gbins:
 
-        # print("new gmax dim % d  limit dim %d"%(new_geo_max_dim,max_num_gbins))
-
         for i in range(par_num):
             g_der_ar[i] = gc_max_dv_normed(old_der_ar[i],which_bin_idx_ar3,new_gdim,weight_list)
 
@@ -279,10 +261,6 @@ def gc_max_dv_normed(bk0, which_bin_idx_ar, dim_new_dv, gc_weights_list):
             new_dv_el = np.dot(gc_weights_list[i].T,bk0[np.where(which_bin_idx_ar==i)])\
                         / np.sum(gc_weights_list[i].T,axis=1)
 
-            # print(np.sum(gc_weights_list[i].T,axis=1))
-            # print("weights shape ",gc_weights_list[i].T.shape, " new_dv_el shape ", new_dv_el.shape)
-            # "with normalisation for each bin"
-            # new_dv_el = np.dot(gc_weights_list[i].T,bk0[np.where(which_bin_idx_ar==i)])/(1.*gc_weights_list[i].shape[0])
 
         if gc_weights_list[i].size == 1:
             new_dv_el = bk0[np.where(which_bin_idx_ar==i)]
