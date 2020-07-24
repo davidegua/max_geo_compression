@@ -2,7 +2,10 @@
 
 code for the compression of 3pt statistics
 
-This code is based on the paper: link
+This code is based on the papers:
+
+https://arxiv.org/abs/1901.00987
+https://arxiv.org/abs/1912.01011v2
 
 For a generic 3pt statistics derive a compressed version of the data-vector.
 
