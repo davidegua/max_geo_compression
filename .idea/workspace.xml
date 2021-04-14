@@ -2,8 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="38c30e44-d14d-420c-8510-835643cda321" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/algo_geo_max.py" beforeDir="false" afterPath="$PROJECT_DIR$/algo_geo_max.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/geometry_triangles.py" beforeDir="false" afterPath="$PROJECT_DIR$/geometry_triangles.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/test_gmax_public.py" beforeDir="false" afterPath="$PROJECT_DIR$/test_gmax_public.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

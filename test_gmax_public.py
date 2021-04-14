@@ -31,6 +31,8 @@ gmax_obj = Best_bins(tr_conf_ar,dv_derivatives,bins_range,geo_bins_max)
 
 "geometrical compression only step"
 # gmax_obj.best_binnings_geo()
+# gmax_obj.rearrange()
+# gmax_obj.comp_dv_geo(dv)
 
 "geo-max compression first step"
 gmax_obj.best_binnings_geo_max(mocks_measurements)
