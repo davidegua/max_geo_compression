@@ -118,6 +118,18 @@ def convert_b0_model(bk0, which_bin_idx_ar, dim_new_dv):
 
     return new_b0_model
 
+def convert_dv_geo_norm(bk0, which_bin_idx_ar, dim_new_dv,list_of_ar):
+
+    new_b0_model = np.zeros(dim_new_dv)
+
+    for i in range(bk0.size):
+        triangles_per_bin = 1. * list_of_ar[which_bin_idx_ar[i]].size
+
+        new_b0_model[which_bin_idx_ar[i]] += bk0[i]/triangles_per_bin
+
+    return new_b0_model
+
+
 """ given der array convert it into normalised derivative """
 def convert_der_ar(bk0, which_bin_idx_ar, dim_new_dv,list_triangles_per_bin):
 

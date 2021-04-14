@@ -64,6 +64,9 @@ class Best_bins:
     def comp_dv(self,dv):
         return mg.gc_max_dv(dv,self.which_b_idx_ar,self.new_gdim,self.gc_weights_list)
 
+    "compress dv only with geometrical step"
+    def comp_dv_geo(self,dv):
+        return gt.convert_dv_geo_norm(dv,self.which_b_idx_ar,self.new_gdim,self.list_of_ar)
 
     "convert 3pt mocks measurements into compressed mocks"
     def comp_mocks(self,mock_measurements):
