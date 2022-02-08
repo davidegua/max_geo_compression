@@ -13,10 +13,10 @@ Input quantities:
 
 1) tr_conf_ar : 2D array containing all the triangle configurations (3 sides) used to compute the original 3pt statistics data-vector (shape = 3 x tr_num)
 
-2)dv_derivatives : 2D array containing the derivatives of the data-vector with respect the model parameters
+2) dv_derivatives : 2D array containing the derivatives of the data-vector with respect the model parameters
                   (shape = par_num x tr_num ) 
 
-3)bins_range: range of the number of bins for each variable that the algorithm scan looking for the best settings
+3) bins_range: range of the number of bins for each variable that the algorithm scan looking for the best settings
                 (e.g. = array([[ 2, 20],[ 3, 20],[ 3, 25]]))
 
 4)geo_bins_max: maximum number of bins that the geometrical compression algorithm is allowed to form 
