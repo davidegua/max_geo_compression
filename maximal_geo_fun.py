@@ -230,17 +230,24 @@ def g_der_arr(lt, new_pars_bins, old_der_ar, max_num_gbins, mocks_measurements):
         bin_triangles_mocks = mocks_measurements[np.where(which_bin_idx_ar3==i)]
 
         triangles_per_bin = bin_triangles_mocks.shape[0]
-        num_mocks_max     =  0.5*mocks_measurements.shape[1]
+        num_mocks_max     = 0.5*mocks_measurements.shape[1]
+        diff_new_dim      = 0
 
         if triangles_per_bin>num_mocks_max:
 
-            # print("too many triangles per bin  ", triangles_per_bin,num_mocks_max)
-
             return np.zeros([par_num, new_gdim * par_num], dtype=float)
+        
+        if triangles_per_bin<par_num:
+            diff_new_dim += par_num - triangles_per_bin
+
 
     weight_list = gc_bin_weights(mocks_measurements,old_der_ar,which_bin_idx_ar3,new_gdim)
 
-    new_geo_max_dim = len(weight_list)*par_num
+    new_geo_max_dim = len(weight_list)*par_num - diff_new_dim
+
+    weight_list = gc_bin_weights(mocks_measurements,old_der_ar,which_bin_idx_ar3,new_gdim)
+
+    new_geo_max_dim = len(weight_list)*par_num  - diff_new_dim
 
     g_der_ar  = np.zeros([par_num,new_geo_max_dim],dtype=float)
 
