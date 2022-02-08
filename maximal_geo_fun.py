@@ -243,10 +243,6 @@ def g_der_arr(lt, new_pars_bins, old_der_ar, max_num_gbins, mocks_measurements):
 
     weight_list = gc_bin_weights(mocks_measurements,old_der_ar,which_bin_idx_ar3,new_gdim)
 
-    new_geo_max_dim = len(weight_list)*par_num - diff_new_dim
-
-    weight_list = gc_bin_weights(mocks_measurements,old_der_ar,which_bin_idx_ar3,new_gdim)
-
     new_geo_max_dim = len(weight_list)*par_num  - diff_new_dim
 
     g_der_ar  = np.zeros([par_num,new_geo_max_dim],dtype=float)
