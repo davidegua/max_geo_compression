@@ -55,7 +55,16 @@ class Best_bins:
     def weights(self,mocks_measurements):
         self.gc_weights_list = mg.gc_bin_weights(mocks_measurements,self.dv_drv,
                                                  self.which_b_idx_ar,self.new_gdim)
-        self.dim_cdv_max = len(self.gc_weights_list) * self.par_num
+#        self.dim_cdv_max = len(self.gc_weights_list) * self.par_num
+        final_dim = 0
+        for i in range(self.new_gdim):
+            if self.gc_weights_list[i].size > 1:
+                final_dim += self.par_num
+
+            if self.gc_weights_list[i].size == 1:
+                final_dim += mocks_measurements[0,np.where(self.which_b_idx_ar == i)].size
+                
+        self.dim_cdv_max = final_dim
 
         print('weights derived for the maximal compression of each bin')
         print('final compressed dimension ',self.dim_cdv_max)
